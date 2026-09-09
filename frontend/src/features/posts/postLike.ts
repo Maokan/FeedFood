@@ -32,7 +32,7 @@ export async function getPostLikes(postId: string): Promise<string[]> {
 
 
 
-export async function removePostLikes(postId: string, userId: string): Promise<number[]> {
+export async function removePostLikes(postId: string, userId: string): Promise<string[]> {
   const response = await fetch(`${API_BASE_URL}/posts/${postId}/like`, {
     method: 'DELETE',
     headers: {
