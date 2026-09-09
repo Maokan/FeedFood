@@ -9,12 +9,12 @@ interface PostCardProps {
   post: FeedPost;
 }
 
-export async function handleLike(postId: string, userId: string, isLiked: boolean): Promise<void> {
+export async function handleLike(postId: string, isLiked: boolean): Promise<void> {
   try {
     if (isLiked) {
-      await removePostLikes(postId, userId);
+      await removePostLikes(postId );
     } else {
-      await addPostLikes(postId, userId);
+      await addPostLikes(postId);
     }
   } catch (error) {
     console.error('Error handling like:', error);
@@ -61,7 +61,7 @@ export default function PostCard({ post }: PostCardProps) {
           <button
             className="rounded-full p-2 hover:bg-brandred/20"
             onClick={() => {
-              void handleLike(post.id, post.author.id, post.isLiked);
+              void handleLike(post.id, post.isLiked);
             }}
           >
             <span className="text-brandred" title="J'aime">
