@@ -204,6 +204,25 @@ router.post(
   }
 );
 
+router.get(
+  "/posts/:id/like",
+  async (req: Request<{ userId: string, postId: string }>, res: Response) => {
+    const { postId: id } = req.params;
+    const userId = req.query.userId;
+
+    if (typeof userId !== "string") {
+      return res.status(400).json({ error: "userId is required" });
+    }
+
+    const like = await prisma.like.findMany({
+      where: { postId: id, userId },
+      include: { user: true },
+    });
+
+    res.json(like);
+  }
+);
+
 router.delete(
   "/comments/:id",
   authenticate,

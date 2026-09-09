@@ -8,6 +8,7 @@ export interface FeedAuthor {
 }
 
 export interface FeedPost {
+  isLiked(id: string, id1: string, isLiked: boolean): void;
   id: string;
   content: string;
   imageUrl: string | null;

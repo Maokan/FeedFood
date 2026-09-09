@@ -3,10 +3,24 @@ import Avatar from '../../components/Avatar';
 import HashtagText from '../../components/HashtagText';
 import { formatTimeAgo } from './formatTimeAgo';
 import type { FeedPost } from './postTypes';
+import { addPostLikes, removePostLikes } from './postLike';
 
 interface PostCardProps {
   post: FeedPost;
 }
+
+export async function handleLike(postId: string, userId: string, isLiked: boolean): Promise<void> {
+  try {
+    if (isLiked) {
+      await removePostLikes(postId, userId);
+    } else {
+      await addPostLikes(postId, userId);
+    }
+  } catch (error) {
+    console.error('Error handling like:', error);
+  }
+}
+
 
 export default function PostCard({ post }: PostCardProps) {
   const imageUrl = resolveAssetUrl(post.imageUrl);
@@ -44,9 +58,16 @@ export default function PostCard({ post }: PostCardProps) {
 
       <div className="px-4 pb-4 pt-3">
         <div className="flex items-center gap-5 text-xl text-cream">
-          <span className="text-brandred" title="J'aime">
-            <i className="fa-solid fa-fire" aria-hidden="true" />
-          </span>
+          <button
+            className="rounded-full p-2 hover:bg-brandred/20"
+            onClick={() => {
+              void handleLike(post.id, post.author.id, post.isLiked);
+            }}
+          >
+            <span className="text-brandred" title="J'aime">
+              <i className="fa-solid fa-fire" aria-hidden="true" />
+            </span>
+          </button>
           <span title="Commentaires">
             <i className="fa-regular fa-comment" aria-hidden="true" />
           </span>
