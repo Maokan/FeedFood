@@ -8,7 +8,6 @@ export interface FeedAuthor {
 }
 
 export interface FeedPost {
-  isLiked(id: string, id1: string, isLiked: boolean): void;
   id: string;
   content: string;
   imageUrl: string | null;
@@ -16,6 +15,7 @@ export interface FeedPost {
   author: FeedAuthor;
   likeCount: number;
   commentCount: number;
+  isLiked: boolean;
 }
 
 export interface FeedPage {

@@ -1,44 +1,37 @@
 import { API_BASE_URL } from '../../api/http';
+import { getValidToken } from '../auth/token';
 
-
-export async function addPostLikes(postId: string): Promise<string[]> {  
-    const isLiked = await getPostLikes(postId);
-    if (isLiked.length > 0) {
-      return isLiked;
-    }
-    
-    const response = await fetch(`${API_BASE_URL}/posts/${postId}/like`, {
-    method: 'POST',
-    headers: {
-      'Authorization': 'Bearer ' + localStorage.getItem('token')
-    },
-    body: JSON.stringify({ postId}),
-  });
-  const data = await response.json();
-  return data;
+/**
+ * Renvoie true si l'utilisateur connecté a liké le post.
+ */
+export async function getPostLikes(postId: string): Promise<boolean> {
+  const data = await sendLikeRequest(postId, 'GET');
+  return data.liked === true;
 }
 
-export async function getPostLikes(postId: string): Promise<string[]> {
-  const response = await fetch(`${API_BASE_URL}/posts/${postId}/like`, {
-    method: 'GET',
-    headers: {
-      'Authorization': 'Bearer ' + localStorage.getItem('token')
-    },
-  });
-  const data = await response.json();
-  return data;
+export async function addPostLikes(postId: string): Promise<void> {
+  await sendLikeRequest(postId, 'POST');
 }
 
+export async function removePostLikes(postId: string): Promise<void> {
+  await sendLikeRequest(postId, 'DELETE');
+}
 
+async function sendLikeRequest(
+  postId: string,
+  method: 'GET' | 'POST' | 'DELETE',
+): Promise<{ liked: boolean }> {
+  const token = getValidToken();
 
-export async function removePostLikes(postId: string): Promise<string[]> {
   const response = await fetch(`${API_BASE_URL}/posts/${postId}/like`, {
-    method: 'DELETE',
-    headers: {
-      'Authorization': 'Bearer ' + localStorage.getItem('token')
-    },
-    body: JSON.stringify({ postId }),
+    method,
+    headers:
+      token !== null ? { Authorization: `Bearer ${token}` } : undefined,
   });
-  const data = await response.json();
-  return data;
+
+  if (!response.ok) {
+    throw new Error(`Le serveur a répondu avec une erreur (${response.status}).`);
+  }
+
+  return (await response.json()) as { liked: boolean };
 }
