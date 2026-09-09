@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import heroImg from './assets/hero.png'
 import reactLogo from './assets/react.svg'
 import viteLogo from './assets/vite.svg'
@@ -6,6 +7,7 @@ import './App.css'
 
 function App() {
   const [count, setCount] = useState(0)
+  const navigate = useNavigate()
 
   return (
     <>
@@ -27,6 +29,14 @@ function App() {
           onClick={() => setCount((count) => count + 1)}
         >
           Count is {count}
+        </button>
+
+        <button
+          type="button"
+          onClick={() => navigate('/newpost')}
+          className="create-post-btn"
+        >
+          Create New Post
         </button>
       </section>
 
