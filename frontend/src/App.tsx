@@ -1,11 +1,19 @@
 import { useState } from 'react'
+import { Link, Route, Routes } from 'react-router-dom'
 import heroImg from './assets/hero.png'
 import reactLogo from './assets/react.svg'
 import viteLogo from './assets/vite.svg'
+import RegisterPage from './features/auth/RegisterPage'
+import LoginPage from './features/auth/LoginPage'
+import RequireAuth from './features/auth/RequireAuth'
+import { decodeToken } from './features/auth/token'
+import ProfilePage from './features/profile/ProfilePage'
 import './App.css'
 
-function App() {
+function Home() {
   const [count, setCount] = useState(0)
+  const token = localStorage.getItem('token')
+  const payload = token ? decodeToken(token) : null
 
   return (
     <>
@@ -21,6 +29,47 @@ function App() {
             Edit <code>src/App.tsx</code> and save to test <code>HMR</code>
           </p>
         </div>
+        {token ? (
+          <div className="token-info">
+            <p>Connecté (rôle : {payload?.role ?? 'inconnu'})</p>
+            <p>
+              Token : <code>{token}</code>
+            </p>
+            {payload && (
+              <p>
+                Expire à : {new Date(payload.exp * 1000).toLocaleTimeString()}
+              </p>
+            )}
+            <Link to="/profile">
+              <button type="button" className="counter">
+                Mon profil
+              </button>
+            </Link>
+            <button
+              type="button"
+              className="counter"
+              onClick={() => {
+                localStorage.removeItem('token')
+                window.location.reload()
+              }}
+            >
+              Se déconnecter
+            </button>
+          </div>
+        ) : (
+          <>
+            <Link to="/register">
+              <button type="button" className="counter">
+                Créer un compte
+              </button>
+            </Link>
+            <Link to="/login">
+              <button type="button" className="counter">
+                Se connecter
+              </button>
+            </Link>
+          </>
+        )}
         <button
           type="button"
           className="counter"
@@ -116,6 +165,24 @@ function App() {
       <div className="ticks"></div>
       <section id="spacer"></section>
     </>
+  )
+}
+
+function App() {
+  return (
+    <Routes>
+      <Route path="/" element={<Home />} />
+      <Route path="/register" element={<RegisterPage />} />
+      <Route path="/login" element={<LoginPage />} />
+      <Route
+        path="/profile"
+        element={
+          <RequireAuth>
+            <ProfilePage />
+          </RequireAuth>
+        }
+      />
+    </Routes>
   )
 }
 

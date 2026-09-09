@@ -3,9 +3,14 @@ import { Request, Response, NextFunction } from "express";
 
 const JWT_SECRET = process.env.JWT_SECRET || "dev-secret-change-me";
 
-// generate a token for a user, no expiration
+// Durée de vie du token : 15 minutes
+const TOKEN_EXPIRES_IN = "15m";
+
+// generate a token for a user, valid 15 minutes
 export function generateToken(userId: string, role: string): string {
-  return jwt.sign({ userId, role }, JWT_SECRET);
+  return jwt.sign({ userId, role }, JWT_SECRET, {
+    expiresIn: TOKEN_EXPIRES_IN,
+  });
 }
 
 export function authenticate(req: Request, res: Response, next: NextFunction) {
