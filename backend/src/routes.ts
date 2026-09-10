@@ -278,9 +278,23 @@ async function getUserPosts(req: Request<{ id: string }>, res: Response) {
   const posts = await prisma.post.findMany({
     where: { authorId: id },
     orderBy: { createdAt: "desc" },
+    include: {
+      author: { select: { id: true, username: true } },
+      _count: { select: { likes: true, comments: true } },
+    },
   });
 
-  res.json(posts);
+  res.json(
+    posts.map((post) => ({
+      id: post.id,
+      content: post.content,
+      imageUrl: post.imageUrl,
+      createdAt: post.createdAt,
+      author: post.author,
+      likeCount: post._count.likes,
+      commentCount: post._count.comments,
+    }))
+  );
 }
 
 router.get("/users/:id", fetch_user);

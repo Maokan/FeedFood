@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import { resolveAssetUrl } from '../../api/http';
 import Avatar from '../../components/Avatar';
 import HashtagText from '../../components/HashtagText';
@@ -14,12 +15,17 @@ export default function PostCard({ post }: PostCardProps) {
   return (
     <article className="mb-6 overflow-hidden rounded-2xl border border-bordercol bg-panel">
       <header className="flex items-center gap-3 px-4 py-3">
-        <Avatar name={post.author.username} size={38} />
+        <Link to={`/profile/${post.author.id}`}>
+          <Avatar name={post.author.username} size={38} />
+        </Link>
         <div className="min-w-0">
-          <div className="truncate text-sm font-semibold">
+          <Link
+            to={`/profile/${post.author.id}`}
+            className="truncate text-sm font-semibold hover:underline"
+          >
             {post.author.username}
-          </div>
-          <time className="text-xs text-dimtext" dateTime={post.createdAt}>
+          </Link>
+          <time className="block text-xs text-dimtext" dateTime={post.createdAt}>
             {formatTimeAgo(post.createdAt)}
           </time>
         </div>
@@ -64,7 +70,9 @@ export default function PostCard({ post }: PostCardProps) {
         </div>
 
         <p className="mt-2 break-words text-sm leading-relaxed">
-          <strong>{post.author.username} </strong>
+          <Link to={`/profile/${post.author.id}`} className="font-bold hover:underline">
+            {post.author.username}{' '}
+          </Link>
           <HashtagText text={post.content} />
         </p>
 
