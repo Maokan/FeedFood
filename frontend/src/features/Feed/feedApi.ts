@@ -1,4 +1,5 @@
 import { API_BASE_URL } from '../../api/http';
+import { getValidToken } from '../auth/token';
 import type { FeedAuthor, FeedPage, FeedPost } from '../posts/postTypes';
 
 const PAGE_SIZE = 10;
@@ -14,7 +15,15 @@ export async function fetchFeedPage(
 
   let response: Response;
   try {
-    response = await fetch(`${API_BASE_URL}/posts?${params}`, { signal });
+    const token = getValidToken();
+    response = await fetch(`${API_BASE_URL}/posts?${params}`, {
+      signal,
+      cache: 'no-store',
+      headers:
+        token !== null
+          ? { Authorization: `Bearer ${token}` }
+          : undefined,
+    });
   } catch (error) {
     if (error instanceof DOMException && error.name === 'AbortError') {
       throw error;
@@ -59,7 +68,8 @@ function isPost(value: unknown): value is FeedPost {
     typeof value.content !== 'string' ||
     typeof value.createdAt !== 'string' ||
     typeof value.likeCount !== 'number' ||
-    typeof value.commentCount !== 'number'
+    typeof value.commentCount !== 'number' ||
+    typeof value.isLiked !== 'boolean'
   ) {
     return false;
   }
