@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import Avatar from '../../components/Avatar';
 import type { FeedAuthor } from '../posts/postTypes';
 
@@ -16,14 +17,18 @@ export default function AuthorsRail({ authors }: AuthorsRailProps) {
       aria-label="Auteurs du fil"
     >
       {authors.map((author) => (
-        <div key={author.id} className="flex min-w-[70px] flex-col items-center gap-1">
+        <Link
+          key={author.id}
+          to={`/profile/${author.id}`}
+          className="flex min-w-[70px] flex-col items-center gap-1"
+        >
           <span className="flex h-[60px] w-[60px] items-center justify-center rounded-full bg-linear-to-br from-brandyellow to-brandred p-[3px]">
             <Avatar name={author.username} size={54} />
           </span>
           <span className="max-w-[74px] truncate text-xs text-dimtext">
             {author.username}
           </span>
-        </div>
+        </Link>
       ))}
     </div>
   );

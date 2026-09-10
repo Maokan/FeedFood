@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import Avatar from '../../components/Avatar';
 import type { AuthorStat } from './authorStats';
 
@@ -17,7 +18,11 @@ export default function FeedSidebar({ authors }: FeedSidebarProps) {
           <p className="m-0 text-sm text-dimtext">Pas encore d'auteurs.</p>
         ) : (
           authors.map(({ author, postCount }) => (
-            <div key={author.id} className="flex items-center gap-3 py-2">
+            <Link
+              key={author.id}
+              to={`/profile/${author.id}`}
+              className="flex items-center gap-3 py-2 hover:opacity-80"
+            >
               <Avatar name={author.username} size={34} />
               <div className="min-w-0">
                 <div className="truncate text-sm font-semibold">
@@ -27,7 +32,7 @@ export default function FeedSidebar({ authors }: FeedSidebarProps) {
                   {postCount} {postCount > 1 ? 'posts' : 'post'}
                 </div>
               </div>
-            </div>
+            </Link>
           ))
         )}
       </section>
