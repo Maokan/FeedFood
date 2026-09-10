@@ -1,12 +1,20 @@
+
 import Popup from 'reactjs-popup';
 import React from 'react';
 import NewPost from '../posts/NewPost';
+import { Link } from 'react-router-dom';
+import { useAuth } from '../auth/useAuth';
+
 export default function FeedHeader() {
+  const { payload } = useAuth();
   return (
     <header className="sticky top-0 z-20 flex items-center justify-between gap-5 border-b border-bordercol bg-panel px-10 py-3">
-      <div className="whitespace-nowrap bg-linear-to-r from-brandred to-brandyellow bg-clip-text text-2xl font-extrabold tracking-wide text-transparent">
+      <Link
+        to="/"
+        className="whitespace-nowrap bg-linear-to-r from-brandred to-brandyellow bg-clip-text text-2xl font-extrabold tracking-wide text-transparent"
+      >
         FeedFood
-      </div>
+      </Link>
 
       <div className="relative hidden w-72 md:block">
         <i
@@ -30,9 +38,9 @@ export default function FeedHeader() {
           <i className="fa-solid fa-compass" aria-hidden="true" />
         </span>
         <span className="inline-flex transition-transform hover:scale-110" title="Créer un post (bientôt)">
-          
+
           <Popup trigger=
-                {<i className="fa-solid fa-square-plus" aria-hidden="true" />} 
+                {<i className="fa-solid fa-square-plus" aria-hidden="true" />}
                 modal nested>
                 {
                     close => (
@@ -53,15 +61,17 @@ export default function FeedHeader() {
           className="inline-flex text-brandred transition-transform hover:scale-110"
           title="Le fil brûlant"
         >
-          
+
           <i className="fa-solid fa-fire" aria-hidden="true" />
         </span>
-        <span
-          className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-bordercol bg-panellight text-sm text-dimtext"
-          title="Se connecter (bientôt)"
+        <Link
+          to={payload ? `/profile/${payload.userId}` : '/login'}
+          className="inline-flex h-8 w-8 cursor-pointer items-center justify-center rounded-full border border-bordercol bg-panellight text-sm text-dimtext transition hover:border-brandyellow hover:text-cream"
+          title="Mon profil"
+          aria-label="Mon profil"
         >
           <i className="fa-solid fa-user" aria-hidden="true" />
-        </span>
+        </Link>
       </nav>
     </header>
   );
