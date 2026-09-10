@@ -15,6 +15,7 @@ export interface FeedPost {
   author: FeedAuthor;
   likeCount: number;
   commentCount: number;
+  isLiked: boolean;
 }
 
 export interface FeedPage {

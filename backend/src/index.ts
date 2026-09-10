@@ -19,6 +19,14 @@ app.use(express.json());
 app.use("/uploads", express.static(uploadsDir));
 app.use(express.static(path.join(__dirname, "..", "public")));
 
+// Les réponses de l'API dépendent de l'utilisateur connecté (isLiked…) :
+// interdiction de les mettre en cache, sinon le navigateur renvoie un 304
+// et ressert une ancienne réponse, ou celle d'un autre utilisateur.
+app.use((req, res, next) => {
+  res.set("Cache-Control", "no-store");
+  next();
+});
+
 app.use(router);
 
 const PORT = process.env.PORT || 3000;
