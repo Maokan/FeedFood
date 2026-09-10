@@ -4,12 +4,11 @@ export default function NewPost() {
   const [image, setImage] = useState<File | null>(null);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
-  // const [id, setId] = useState<string | null>(null);
-  // const [authorId, setAuthorId] = useState<string | null>(null);
+
   const id = "temp-id-123";
   const authorId = "temp-author-456";
   const getToken = (): string | null => {
-    return localStorage.getItem("token"); // or "jwtToken", depending on your key
+    return localStorage.getItem("token");
   };
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -64,8 +63,9 @@ export default function NewPost() {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <label>
+    <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", backgroundColor: "#151515", padding: "50px", border: "solid", borderColor: "#000000", borderRadius: "10px", width: "100%" }}>
+    <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "5px", width: "100%" }}>
+      <label style={{ width: "100%", margin: 0, padding: 0 }}>
         Contenu du post :
         <br/>
         <textarea
@@ -74,7 +74,8 @@ export default function NewPost() {
           onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setContent(e.target.value)}
           minLength={10}
           maxLength={2000}
-          required
+            required
+            style={{ width: "100%", margin: 0, backgroundColor: "#FF4C26", borderColor: "#000000", padding: "5px", borderRadius: "10px", color: "#151515" }}
         />
       </label>
       <p>{content.length}/2000 caractères</p>
@@ -98,11 +99,14 @@ export default function NewPost() {
         )}
       </div>
 
-      <button type="submit">Post</button>
+        <div style={{ justifyContent: "center", display: "flex", flexDirection: "column", alignItems: "center", border: "solid", borderColor: "#000000", borderRadius: "10px", padding: "5px", backgroundColor: "#000000", width: "100%" }}>
+          <button type="submit">Post</button>
+        </div>
       {/* if (response.ok)
       {
         onClose()
    } */}
-    </form>
+      </form>
+      </div>
   );
 }
