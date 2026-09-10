@@ -8,13 +8,13 @@ import RequireAuth from './features/auth/RequireAuth';
 function App() {
   return (
     <Routes>
-      <Route 
-        path="/" 
+      <Route
+        path="/"
         element={
           <RequireAuth>
             <FeedPage />
           </RequireAuth>
-        } 
+        }
       />
       <Route path="/register" element={<RegisterPage />} />
       <Route path="/login" element={<LoginPage />} />
