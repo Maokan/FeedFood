@@ -3,7 +3,7 @@ import Avatar from '../../components/Avatar';
 import HashtagText from '../../components/HashtagText';
 import { formatTimeAgo } from './formatTimeAgo';
 import type { FeedPost } from './postTypes';
-
+import { Link } from "react-router-dom";
 interface PostCardProps {
   post: FeedPost;
 }
@@ -13,6 +13,7 @@ export default function PostCard({ post }: PostCardProps) {
 
   return (
     <article className="mb-6 overflow-hidden rounded-2xl border border-bordercol bg-panel">
+      <Link to={`/${post.id}`}>
       <header className="flex items-center gap-3 px-4 py-3">
         <Avatar name={post.author.username} size={38} />
         <div className="min-w-0">
@@ -74,6 +75,7 @@ export default function PostCard({ post }: PostCardProps) {
             : `Voir les ${post.commentCount} commentaires`}
         </div>
       </div>
+      </Link>
     </article>
   );
 }

@@ -4,6 +4,8 @@ import RegisterPage from './features/Auth/RegisterPage';
 import LoginPage from './features/Auth/LoginPage';
 import ProfilePage from './features/Profile/ProfilePage';
 import RequireAuth from './features/Auth/RequireAuth';
+import PostDetails from './features/posts/PostDetails';
+
 
 function App() {
   return (
@@ -19,7 +21,9 @@ function App() {
           </RequireAuth>
         }
       />
+      <Route path="/:id" element={<PostDetails/>} />
     </Routes>
+    
   )
 }
 

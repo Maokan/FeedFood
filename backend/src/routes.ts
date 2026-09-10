@@ -188,9 +188,13 @@ router.post(
   authenticate,
   async (req: Request<{ id: string }>, res: Response) => {
     const { id } = req.params;
-    const { content } = req.body;
+    const content = req.body?.content || req.query?.content;
     const userId = (req as any).userId;
+    if (!content) {
+      return res.status(400).json({ error: "Content is required" });
+    }
 
+    try {
     const comment = await prisma.comment.create({
       data: {
         content,
@@ -201,6 +205,10 @@ router.post(
     });
 
     res.json(comment);
+    } catch (error) {
+      console.error("Error creating comment:", error);
+      res.status(500).json({ error: "Failed to create comment" });
+    }
   }
 );
 
