@@ -1,3 +1,7 @@
+
+import Popup from 'reactjs-popup';
+import React from 'react';
+import NewPost from '../posts/NewPost';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../auth/useAuth';
 
@@ -34,12 +38,30 @@ export default function FeedHeader() {
           <i className="fa-solid fa-compass" aria-hidden="true" />
         </span>
         <span className="inline-flex transition-transform hover:scale-110" title="Créer un post (bientôt)">
-          <i className="fa-solid fa-square-plus" aria-hidden="true" />
+
+          <Popup trigger=
+                {<i className="fa-solid fa-square-plus" aria-hidden="true" />}
+                modal nested>
+                {
+                    close => (
+                        <div className='modal'>
+                            <NewPost/>
+                            <div>
+                                <button onClick=
+                                    {() => close()}>
+                                        Fermer
+                                </button>
+                            </div>
+                        </div>
+                    )
+                }
+            </Popup>
         </span>
         <span
           className="inline-flex text-brandred transition-transform hover:scale-110"
           title="Le fil brûlant"
         >
+
           <i className="fa-solid fa-fire" aria-hidden="true" />
         </span>
         <Link
