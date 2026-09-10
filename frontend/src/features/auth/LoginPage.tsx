@@ -1,7 +1,7 @@
 import { useState } from "react";
 import type { FormEvent } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { login } from "./api";
+import { login, type AuthResponse } from "./api";
 import { validateEmail } from "./validation";
 import "./LoginPage.css";
 import "./auth-shared.css";
@@ -32,7 +32,7 @@ export default function LoginPage() {
     setLoading(true);
 
     try {
-      const data = await login({ email, password });
+      const data: AuthResponse = await login({ email, password });
 
       // Le backend renvoie 200 même en cas d'erreur (ex: identifiants invalides)
       if (data.error || !data.token) {
