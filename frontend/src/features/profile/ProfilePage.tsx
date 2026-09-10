@@ -1,14 +1,13 @@
 import { Link, useNavigate } from "react-router-dom";
 import Avatar from "../../components/Avatar";
-import { decodeToken, getValidToken } from "../auth/token";
+import { useAuth } from "../auth/useAuth";
 
 export default function ProfilePage() {
-  const token = getValidToken();
-  const payload = token ? decodeToken(token) : null;
+  const { payload, logout } = useAuth();
   const navigate = useNavigate();
 
   function handleLogout() {
-    localStorage.removeItem("token");
+    logout();
     navigate("/login");
   }
 

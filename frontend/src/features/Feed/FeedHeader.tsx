@@ -1,3 +1,5 @@
+import { Link } from 'react-router-dom';
+
 export default function FeedHeader() {
   return (
     <header className="sticky top-0 z-20 flex items-center justify-between gap-5 border-b border-bordercol bg-panel px-10 py-3">
@@ -35,12 +37,14 @@ export default function FeedHeader() {
         >
           <i className="fa-solid fa-fire" aria-hidden="true" />
         </span>
-        <span
-          className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-bordercol bg-panellight text-sm text-dimtext"
-          title="Se connecter (bientôt)"
+        <Link
+          to="/profile"
+          className="inline-flex h-8 w-8 cursor-pointer items-center justify-center rounded-full border border-bordercol bg-panellight text-sm text-dimtext transition hover:border-brandyellow hover:text-cream"
+          title="Mon profil"
+          aria-label="Mon profil"
         >
           <i className="fa-solid fa-user" aria-hidden="true" />
-        </span>
+        </Link>
       </nav>
     </header>
   );

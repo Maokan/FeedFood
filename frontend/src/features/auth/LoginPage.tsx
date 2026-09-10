@@ -2,6 +2,7 @@ import { useState } from "react";
 import type { FormEvent } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { login } from "./api";
+import { useAuth } from "./useAuth";
 import { validateEmail } from "./validation";
 
 const inputClass =
@@ -18,6 +19,7 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
+  const { login: setSession } = useAuth();
 
   // Page demandée avant la redirection vers /login (si fournie)
   const from = (location.state as { from?: string } | null)?.from ?? "/";
@@ -44,7 +46,7 @@ export default function LoginPage() {
         return;
       }
 
-      localStorage.setItem("token", data.token);
+      setSession(data.token);
       navigate(from, { replace: true });
     } catch {
       setError("Erreur réseau, veuillez réessayer");
