@@ -19,7 +19,7 @@ function App() {
       <Route path="/register" element={<RegisterPage />} />
       <Route path="/login" element={<LoginPage />} />
       <Route
-        path="/profile"
+        path="/profile/:userId"
         element={
           <RequireAuth>
             <ProfilePage />
