@@ -95,6 +95,7 @@ function parseCursor(raw: unknown): string | undefined {
 async function getPosts(req: Request, res: Response) {
   const limit = parsePageSize(req.query.limit);
   const cursor = parseCursor(req.query.cursor);
+  const userId = (req as any).userId as string;
 
   // One extra post tells us whether another page exists.
   const posts = await prisma.post.findMany({
@@ -104,6 +105,8 @@ async function getPosts(req: Request, res: Response) {
     include: {
       author: { select: { id: true, username: true } },
       _count: { select: { likes: true, comments: true } },
+      // Le like de l'utilisateur connecté, pour savoir si le feu est allumé.
+      likes: { where: { userId }, select: { id: true } },
     },
   });
 
@@ -119,6 +122,7 @@ async function getPosts(req: Request, res: Response) {
       author: post.author,
       likeCount: post._count.likes,
       commentCount: post._count.comments,
+      isLiked: post.likes.length > 0,
     })),
     nextCursor: hasMore ? page[page.length - 1].id : null,
   });
@@ -176,7 +180,7 @@ async function deletePost(req: Request<{ id: string }>, res: Response) {
   res.json({ success: true });
 }
 
-router.get("/posts", getPosts);
+router.get("/posts", authenticate, getPosts);
 router.post("/posts", authenticate, upload.single("image"), handleCreatePost);
 router.get("/posts/:id", getPostById);
 router.delete("/posts/:id", authenticate, deletePost);
@@ -248,11 +252,8 @@ router.get(
       where: { postId: id, userId },
     });
 
-    if (!like) {
-      return res.status(200).json({ error: "Like not found" });
-    }
-
-    res.json(like);
+    // Réponse alignée sur le front : { liked: boolean }.
+    res.json({ liked: like !== null });
   }
 );
 

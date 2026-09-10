@@ -1,9 +1,6 @@
 import { API_BASE_URL } from '../../api/http';
 import { getValidToken } from '../auth/token';
 
-/**
- * Renvoie true si l'utilisateur connecté a liké le post.
- */
 export async function getPostLikes(postId: string): Promise<boolean> {
   const data = await sendLikeRequest(postId, 'GET');
   return data.liked === true;
@@ -25,6 +22,7 @@ async function sendLikeRequest(
 
   const response = await fetch(`${API_BASE_URL}/posts/${postId}/like`, {
     method,
+    cache: 'no-store',
     headers:
       token !== null ? { Authorization: `Bearer ${token}` } : undefined,
   });

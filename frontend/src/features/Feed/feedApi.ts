@@ -18,6 +18,7 @@ export async function fetchFeedPage(
     const token = getValidToken();
     response = await fetch(`${API_BASE_URL}/posts?${params}`, {
       signal,
+      cache: 'no-store',
       headers:
         token !== null
           ? { Authorization: `Bearer ${token}` }
