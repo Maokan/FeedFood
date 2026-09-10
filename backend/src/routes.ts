@@ -74,36 +74,54 @@ router.post("/auth/login", (req: Request, res: Response) => {
 
 // ==================== POSTS ====================
 
-// get the feed of all posts, most recent first
+const DEFAULT_PAGE_SIZE = 10;
+const MAX_PAGE_SIZE = 50;
+
+function parsePageSize(raw: unknown): number {
+  const value = typeof raw === "string" ? Number(raw) : Number.NaN;
+  if (!Number.isInteger(value) || value < 1) {
+    return DEFAULT_PAGE_SIZE;
+  }
+  return Math.min(value, MAX_PAGE_SIZE);
+}
+
+function parseCursor(raw: unknown): string | undefined {
+  return typeof raw === "string" && raw.length > 0 ? raw : undefined;
+}
+
+// Feed of recent posts, newest first.
+// Pagination is cursor-based so posts are not duplicated or skipped when a
+// new post is inserted between two page loads.
 async function getPosts(req: Request, res: Response) {
+  const limit = parsePageSize(req.query.limit);
+  const cursor = parseCursor(req.query.cursor);
+
+  // One extra post tells us whether another page exists.
   const posts = await prisma.post.findMany({
-    orderBy: { createdAt: "desc" },
+    take: limit + 1,
+    ...(cursor ? { cursor: { id: cursor }, skip: 1 } : {}),
+    orderBy: [{ createdAt: "desc" }, { id: "desc" }],
+    include: {
+      author: { select: { id: true, username: true } },
+      _count: { select: { likes: true, comments: true } },
+    },
   });
 
-  const feed = [];
+  const hasMore = posts.length > limit;
+  const page = hasMore ? posts.slice(0, limit) : posts;
 
-  for (const post of posts) {
-    // get the author from the database
-    const author = await prisma.user.findUnique({
-      where: { id: post.authorId },
-    });
-    const likeCount = await prisma.like.count({ where: { postId: post.id } });
-    const commentCount = await prisma.comment.count({
-      where: { postId: post.id },
-    });
-
-    feed.push({
+  res.json({
+    posts: page.map((post) => ({
       id: post.id,
       content: post.content,
       imageUrl: post.imageUrl,
-      created_at: post.createdAt,
-      author: author ? { id: author.id, username: author.username } : null,
-      likeCount,
-      commentCount,
-    });
-  }
-
-  res.json(feed);
+      createdAt: post.createdAt,
+      author: post.author,
+      likeCount: post._count.likes,
+      commentCount: post._count.comments,
+    })),
+    nextCursor: hasMore ? page[page.length - 1].id : null,
+  });
 }
 
 async function handleCreatePost(req: Request, res: Response) {

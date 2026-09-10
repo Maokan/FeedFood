@@ -20,8 +20,11 @@ Content-Type: application/json
   "password": "password123"
 }
 
-### Get feed
-GET {{baseUrl}}/posts
+### Get feed (first page, newest first)
+GET {{baseUrl}}/posts?limit=10
+
+### Get feed (next page, using nextCursor from the previous response)
+GET {{baseUrl}}/posts?limit=10&cursor=REPLACE_ME_WITH_NEXT_CURSOR
 
 ### Get single post
 GET {{baseUrl}}/posts/REPLACE_ME
