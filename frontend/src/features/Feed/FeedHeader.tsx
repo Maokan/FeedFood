@@ -1,6 +1,6 @@
 
 import Popup from 'reactjs-popup';
-import React from 'react';
+import type { ReactNode } from 'react';
 import NewPost from '../posts/NewPost';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../auth/useAuth';
@@ -43,7 +43,7 @@ export default function FeedHeader() {
                 {<i className="fa-solid fa-square-plus" aria-hidden="true" />}
                 modal nested>
                 {
-                    close => (
+                  ((close: () => void) => (
                         <div className='modal'>
                             <NewPost/>
                             <div>
@@ -53,7 +53,7 @@ export default function FeedHeader() {
                                 </button>
                             </div>
                         </div>
-                    )
+                      )) as unknown as ReactNode
                 }
             </Popup>
         </span>
