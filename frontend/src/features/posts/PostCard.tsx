@@ -1,12 +1,15 @@
 import { useState } from 'react';
-
+import { API_BASE_URL } from '../../api/http';
+import Popup from 'reactjs-popup';
+import NewPost from '../posts/NewPost';
+import { Link } from 'react-router-dom';
 import { resolveAssetUrl } from '../../api/http';
 import Avatar from '../../components/Avatar';
 import HashtagText from '../../components/HashtagText';
 import { formatTimeAgo } from './formatTimeAgo';
 import type { FeedPost } from './postTypes';
-import { Link } from "react-router-dom";
 import { addPostLikes, removePostLikes } from './postLike';
+
 
 interface PostCardProps {
   post: FeedPost;
@@ -24,8 +27,6 @@ export default function PostCard({ post }: PostCardProps) {
       return;
     }
 
-    // Mise à jour optimiste : l'UI réagit immédiatement, puis on annule
-    // si le serveur répond par une erreur.
     const nextLiked = !isLiked;
     setIsLiked(nextLiked);
     setLikeCount((count) => count + (nextLiked ? 1 : -1));
@@ -63,6 +64,35 @@ export default function PostCard({ post }: PostCardProps) {
           <time className="block text-xs text-dimtext" dateTime={post.createdAt}>
             {formatTimeAgo(post.createdAt)}
           </time>
+        </div>
+        <div>
+        <Popup trigger=
+                        {<i className="fa-solid fa-ellipsis-vertical items-right" aria-hidden="true" />}
+                        modal nested>
+                        {
+                            close => (
+                                <div className='modal'>
+                                  <div>
+                                    <button onClick={navigator.clipboard.writeText(`http://localhost:5173/${post.id}`)}>
+                                        Copier le lien
+                                    </button>
+                                  </div>
+                                  <div>
+                                    <button onClick={navigator.clipboard.writeText(`http://localhost:5173/${post.id}`)}>
+                                        supprimer le post(WIP)
+                                    </button>
+                                  </div>
+                                  <div>
+                                    <button onClick=
+                                            {() => close()}>
+                                                Fermer
+                                        </button>
+                                  </div>
+                                  
+                                </div>
+                            )
+                        }
+                    </Popup>
         </div>
       </header>
 

@@ -8,6 +8,8 @@ import usePost from './usePosts';
 import React, { useState } from "react";
 import { API_BASE_URL } from '../../api/http';
 import { getValidToken } from '../auth/token';
+import usePostComments from './usePostComments';
+import type { Comment } from './commentTypes';
 
 export default function PostDetails() {
   const [content, setContent] = useState<string>("");
@@ -15,7 +17,7 @@ export default function PostDetails() {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const { id } = useParams<{ id: string }>();
   const { post, status, errorMessage, handleRetry } = usePost(id);
-
+  const { comments, status: commentsStatus, handleRetry: retryComments } = usePostComments(id);
   if (status === 'loading') {
     return <StateCard icon="fa-spinner" title="Chargement..." text="" />;
   }
@@ -179,7 +181,34 @@ export default function PostDetails() {
               </form>
         </div>
         <div>
-        <p>COMMENTAIRES</p>
+<div>
+          <h3>Commentaires ({comments.length})</h3>
+
+          {commentsStatus === 'loading' && <p>Chargement des commentaires...</p>}
+
+          {commentsStatus === 'error' && (
+            <div>
+              <p>Erreur au chargement des commentaires</p>
+              <button onClick={retryComments}>Réessayer</button>
+            </div>
+          )}
+
+          {commentsStatus === 'success' && comments.length > 0 && (
+            <div>
+              {comments.map((comment: Comment) => (
+                <div key={comment.id}>
+                  <strong>{comment.author.username}</strong>
+                  <p>{comment.content}</p>
+                  <time>{formatTimeAgo(comment.createdAt)}</time>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {commentsStatus === 'success' && comments.length === 0 && (
+            <p>Aucun commentaire pour le moment</p>
+          )}
+        </div>
       </div>
       </div>
     </article>

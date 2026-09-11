@@ -4,8 +4,10 @@ import React from 'react';
 import NewPost from '../posts/NewPost';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../auth/useAuth';
-
-export default function FeedHeader() {
+interface FeedHeaderProps {
+  onPostCreated?: () => void;
+}
+export default function FeedHeader({ onPostCreated }: FeedHeaderProps) {
   const { payload } = useAuth();
   return (
     <header className="sticky top-0 z-20 flex items-center justify-between gap-5 border-b border-bordercol bg-panel px-10 py-3">
@@ -45,7 +47,10 @@ export default function FeedHeader() {
                 {
                     close => (
                         <div className='modal'>
-                            <NewPost/>
+                            <NewPost onClose={() => {
+                              onPostCreated?.();
+                              close()
+                              }} />
                             <div>
                                 <button onClick=
                                     {() => close()}>
@@ -55,6 +60,7 @@ export default function FeedHeader() {
                         </div>
                     )
                 }
+            
             </Popup>
         </span>
         <span

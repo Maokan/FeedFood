@@ -7,6 +7,7 @@ import FeedHeader from './FeedHeader';
 import FeedSkeleton from './FeedSkeleton';
 import FeedSidebar from './FeedSidebar';
 import useFeedPosts from './useFeedPosts';
+import React, { useState, useCallback } from 'react';
 
 export default function FeedPage() {
   const feed = useFeedPosts();
@@ -14,11 +15,14 @@ export default function FeedPage() {
     () => computeAuthorStats(feed.posts),
     [feed.posts],
   );
-
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
+const handlePostCreated = useCallback(() => {
+    setRefreshTrigger((prev) => prev + 1);
+  }, []);
   return (
     <>
-      <FeedHeader />
-
+      <FeedHeader onPostCreated={handlePostCreated} />
+      
       <div className="mx-auto flex max-w-[1100px] items-start gap-8 px-5 py-8">
         <main className="min-w-0 flex-[2]">
           {feed.status === 'loading' && <FeedSkeleton />}

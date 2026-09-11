@@ -1,5 +1,9 @@
 import React, { useState } from "react";
-export default function NewPost() {
+  interface NewPostProps {
+  onClose?: () => void;
+}
+export default function NewPost({ onClose }: NewPostProps) {
+
   const [content, setContent] = useState<string>("");
   const [image, setImage] = useState<File | null>(null);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
@@ -41,11 +45,14 @@ export default function NewPost() {
       const post = await response.json();
 
       console.log("le post a été crée ! :", post);
-
-      // Reset form
+      
       setContent("");
       setImage(null);
       setSelectedImage(null);
+
+      if (onClose) {
+        onClose();
+      }
     } catch (error) {
       console.error(error);
     }
@@ -102,11 +109,7 @@ export default function NewPost() {
         <div style={{ justifyContent: "center", display: "flex", flexDirection: "column", alignItems: "center", border: "solid", borderColor: "#000000", borderRadius: "10px", padding: "5px", backgroundColor: "#000000", width: "100%" }}>
           <button type="submit">Post</button>
         </div>
-      {/* if (response.ok)
-      {
-        onClose()
-   } */}
       </form>
       </div>
   );
-}
+  }
