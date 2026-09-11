@@ -3,7 +3,6 @@ import type { ReactNode } from "react";
 import { AuthContext } from "./auth-context";
 import { decodeToken, getValidToken } from "./token";
 
-/** Fournit le token (localStorage) et sa version décodée à toute l'application. */
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [token, setToken] = useState<string | null>(() => getValidToken());
 

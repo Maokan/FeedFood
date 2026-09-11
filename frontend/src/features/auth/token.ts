@@ -5,7 +5,6 @@ export interface TokenPayload {
   exp: number;
 }
 
-// Décode la partie payload d'un JWT (sans vérifier la signature)
 export function decodeToken(token: string): TokenPayload | null {
   try {
     const payload = token.split(".")[1];
@@ -15,7 +14,6 @@ export function decodeToken(token: string): TokenPayload | null {
   }
 }
 
-// Renvoie le token s'il existe et n'est pas expiré, sinon null
 export function getValidToken(): string | null {
   const token = localStorage.getItem("token");
   if (!token) {
@@ -24,7 +22,6 @@ export function getValidToken(): string | null {
 
   const payload = decodeToken(token);
   if (!payload || payload.exp * 1000 <= Date.now()) {
-    // Token illisible ou expiré : on le supprime
     localStorage.removeItem("token");
     return null;
   }

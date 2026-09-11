@@ -41,13 +41,11 @@ export default function RegisterPage() {
     try {
       const data = await register({ email, username, password });
 
-      // Le backend renvoie 200 même en cas d'erreur (ex: email déjà utilisé)
       if (data.error) {
         setError(data.error);
         return;
       }
 
-      // Pas de connexion automatique : on redirige vers la page de connexion
       navigate("/login");
     } catch {
       setError("Erreur réseau, veuillez réessayer");

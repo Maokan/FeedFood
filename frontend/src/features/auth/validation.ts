@@ -1,6 +1,4 @@
-// Validations côté front pour les formulaires d'authentification.
 
-// Format d'adresse email standard
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export function validateEmail(email: string): string | null {
@@ -23,8 +21,6 @@ export function validateUsername(username: string): string | null {
   return null;
 }
 
-// Mot de passe : 8 caractères minimum, au moins 1 minuscule,
-// 1 majuscule, 1 chiffre et 1 caractère spécial
 export function validatePassword(password: string): string | null {
   if (password.length < 8) {
     return "Le mot de passe doit contenir au moins 8 caractères";

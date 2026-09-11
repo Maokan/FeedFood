@@ -12,7 +12,6 @@ export interface AuthResponse {
   error?: string;
 }
 
-// Appelle la route backend POST /auth/register
 export async function register(payload: RegisterPayload): Promise<AuthResponse> {
   const res = await fetch(`${API_URL}/auth/register`, {
     method: "POST",
@@ -27,7 +26,6 @@ export interface LoginPayload {
   password: string;
 }
 
-// Appelle la route backend POST /auth/login
 export async function login(payload: LoginPayload): Promise<AuthResponse> {
   const res = await fetch(`${API_URL}/auth/login`, {
     method: "POST",

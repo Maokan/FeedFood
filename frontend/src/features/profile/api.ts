@@ -9,7 +9,6 @@ export interface ProfileUser {
   createdAt: string;
 }
 
-// Appelle la route backend GET /users/:id
 export async function fetchUserProfile(userId: string): Promise<ProfileUser | null> {
   const res = await fetch(`${API_BASE_URL}/users/${userId}`);
   if (!res.ok) {
@@ -19,7 +18,6 @@ export async function fetchUserProfile(userId: string): Promise<ProfileUser | nu
   return user ?? null;
 }
 
-// Appelle la route backend GET /users/:id/posts
 export async function fetchUserPosts(userId: string): Promise<FeedPost[]> {
   const res = await fetch(`${API_BASE_URL}/users/${userId}/posts`);
   if (!res.ok) {

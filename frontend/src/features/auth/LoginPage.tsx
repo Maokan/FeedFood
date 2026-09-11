@@ -23,7 +23,6 @@ export default function LoginPage() {
   const location = useLocation();
   const { login: setSession } = useAuth();
 
-  // Page demandée avant la redirection vers /login (si fournie)
   const from = (location.state as { from?: string } | null)?.from ?? "/";
 
   async function handleSubmit(event: FormEvent) {
@@ -42,7 +41,6 @@ export default function LoginPage() {
     try {
       const data: AuthResponse = await login({ email, password });
 
-      // Le backend renvoie 200 même en cas d'erreur (ex: identifiants invalides)
       if (data.error || !data.token) {
         setError(data.error ?? "Connexion impossible");
         return;
